@@ -1,0 +1,44 @@
+Seções Detalhadas
+1. Boas-Vindas
+Uma mensagem com o nome do administrador, como:
+"Bem-vindo(a), [Nome]! Aqui está um resumo das suas atividades."
+Ícones ou ilustrações que deixem a interface amigável.
+Frases motivacionais ou mensagens automáticas, como "Tudo pronto para gerenciar hoje?".
+
+
+2. Visão Geral (Dashboard)
+Apresente dados em cards ou gráficos simples, como:
+Galeria:
+Total de imagens e depoimentos cadastrados.
+Quantidade de itens em destaque.
+Landing Page:
+Número de cards ativos.
+Última atualização realizada (ex.: "Texto da profissional atualizado em 22/01").
+Visitantes (Opcional):
+Se você tiver analytics integrado, mostre o número de visitas recentes.
+
+
+3. Atalhos Rápidos
+Adicione botões grandes e visíveis para acessar as outras áreas da administração:
+
+Editar Galeria: Redireciona para a página de "Adm Galeria".
+Editar Landing Page: Vai para "Adm Landing Page".
+Configurações Gerais: Acesso às configurações globais (como cor do tema, título da página, favicon, etc.).
+Preview do Site: Botão para abrir o site principal em uma nova aba.
+
+
+4. Últimas Atualizações
+Mostre um histórico com as alterações feitas recentemente, para que o administrador veja rapidamente o que já foi alterado:
+
+Exemplo de entradas:
+"Imagem X adicionada à galeria (22/01)."
+"Texto da apresentação atualizado (21/01)."
+"Novo card criado: 'Depoimentos' (20/01)."
+
+
+5. Configurações Gerais
+Deixe um atalho para ajustes globais que afetam o site como um todo, como:
+
+Tema de cores do site.
+Título da página.
+Alterar favicon ou logo principal.

@@ -1,0 +1,28 @@
+.atualizacoes {
+   background-color: #292941;
+   padding: 20px;
+   border-radius: 8px;
+   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+   color: #fff;
+   flex: 1;
+ }
+ 
+ .atualizacoes h2 {
+   color: #ff6f61;
+   margin-bottom: 10px;
+ }
+ 
+ .atualizacoes ul {
+   list-style: none;
+   padding: 0;
+ }
+ 
+ .atualizacoes li {
+   margin-bottom: 8px;
+   color: #b0b0b0;
+ }
+ 
+ .atualizacoes li:last-child {
+   margin-bottom: 0;
+ }
+ 
