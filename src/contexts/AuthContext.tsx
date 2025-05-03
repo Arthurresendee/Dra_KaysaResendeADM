@@ -29,7 +29,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsAuthenticated(true);
     } else {
       // Se não houver token, redireciona para o login
-      window.location.href = 'https://drakaysa.com.br/login';
+      window.location.href = 'https://drakaysa.com.br';
     }
   }, []);
 
@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem('auth_token');
     setToken(null);
     setIsAuthenticated(false);
-    window.location.href = 'https://drakaysa.com.br/login';
+    window.location.href = 'https://drakaysa.com.br';
   };
 
   return (
