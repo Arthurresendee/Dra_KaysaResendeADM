@@ -13,14 +13,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    // Verificar token no localStorage ao carregar a aplicação
+    // 1. Captura o token da URL, se existir
+    const params = new URLSearchParams(window.location.search);
+    const urlToken = params.get('token');
+    if (urlToken) {
+      localStorage.setItem('auth_token', urlToken);
+      // Limpa o token da URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    // 2. Verifica o token no localStorage
     const storedToken = localStorage.getItem('auth_token');
-    if (storedToken) {
-      setToken(storedToken);
+    if (storedToken || urlToken) {
+      setToken(storedToken || urlToken);
       setIsAuthenticated(true);
     } else {
-      // Se não houver token, redirecionar para o projeto de login
-      window.location.href = 'http://localhost:3000'; // Substitua pela URL do seu projeto de login
+      // Se não houver token, redireciona para o login
+      window.location.href = 'https://drakaysa.com.br/login';
     }
   }, []);
 
@@ -28,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem('auth_token');
     setToken(null);
     setIsAuthenticated(false);
-    window.location.href = 'http://localhost:3000'; // Substitua pela URL do seu projeto de login
+    window.location.href = 'https://drakaysa.com.br/login';
   };
 
   return (
