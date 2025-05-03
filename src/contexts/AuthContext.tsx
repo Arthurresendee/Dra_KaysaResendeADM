@@ -20,7 +20,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsAuthenticated(true);
     } else {
       // Se não houver token, redirecionar para o projeto de login
-      window.location.href = 'https://drakaysa.com.br/login';
+      window.location.href = 'http://localhost:3000'; // Substitua pela URL do seu projeto de login
     }
   }, []);
 
@@ -28,7 +28,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem('auth_token');
     setToken(null);
     setIsAuthenticated(false);
-    window.location.href = 'https://drakaysa.com.br/login';
+    window.location.href = 'http://localhost:3000'; // Substitua pela URL do seu projeto de login
   };
 
   return (
