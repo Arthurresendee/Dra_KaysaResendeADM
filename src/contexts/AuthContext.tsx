@@ -16,16 +16,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // 1. Captura o token da URL, se existir
     const params = new URLSearchParams(window.location.search);
     const urlToken = params.get('token');
+
     if (urlToken) {
       localStorage.setItem('auth_token', urlToken);
+      setToken(urlToken);
+      setIsAuthenticated(true);
       // Limpa o token da URL
       window.history.replaceState({}, document.title, window.location.pathname);
+      return; // Garante que não vai cair no else abaixo
     }
 
     // 2. Verifica o token no localStorage do admin
     const storedToken = localStorage.getItem('auth_token');
-    if (storedToken || urlToken) {
-      setToken(storedToken || urlToken);
+    if (storedToken) {
+      setToken(storedToken);
       setIsAuthenticated(true);
     } else {
       // Se não houver token, redireciona para o login
