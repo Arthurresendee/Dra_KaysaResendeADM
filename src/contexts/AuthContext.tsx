@@ -22,7 +22,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       window.history.replaceState({}, document.title, window.location.pathname);
     }
 
-    // 2. Verifica o token no localStorage
+    // 2. Verifica o token no localStorage do admin
     const storedToken = localStorage.getItem('auth_token');
     if (storedToken || urlToken) {
       setToken(storedToken || urlToken);
