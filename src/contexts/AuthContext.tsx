@@ -19,6 +19,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Limpa o token da URL
       window.history.replaceState({}, document.title, window.location.pathname);
     }
+
+    // Verifica se existe token no localStorage
+    const storedToken = localStorage.getItem('auth_token');
+    if (!storedToken) {
+      // Se não houver token, redireciona para o login
+      window.location.href = 'https://drakaysa.com.br';
+    }
   }, []);
 
   // Valores padrão sem validação
