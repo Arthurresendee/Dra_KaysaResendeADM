@@ -5,6 +5,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   token: string | null;
   logout: () => void;
+  getTokenExpiration: () => string | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -26,6 +27,21 @@ function isValidJWT(token: string): boolean {
     return true;
   } catch {
     return false;
+  }
+}
+
+// Função para obter a data de expiração do token
+function getTokenExpiration(token: string): string | null {
+  try {
+    const parts = token.split('.');
+    if (parts.length !== 3) return null;
+    
+    const payload = JSON.parse(atob(parts[1]));
+    const expirationTime = payload.exp * 1000; // Converter para milissegundos
+    
+    return new Date(expirationTime).toLocaleString();
+  } catch {
+    return null;
   }
 }
 
@@ -101,8 +117,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     window.location.href = 'https://drakaysa.com.br';
   };
 
+  const getTokenExpiration = () => {
+    if (!token) return null;
+    return getTokenExpiration(token);
+  };
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, token, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, token, logout, getTokenExpiration }}>
       {children}
     </AuthContext.Provider>
   );
