@@ -10,6 +10,11 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Função para verificar se está em ambiente de desenvolvimento
+const isDevelopment = () => {
+  return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+};
+
 // Função para validar se é um JWT válido
 function isValidJWT(token: string): boolean {
   try {
@@ -43,7 +48,7 @@ axios.interceptors.request.use((config) => {
 axios.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401 && !isDevelopment()) {
       // Token inválido ou expirado
       localStorage.removeItem('auth_token');
       window.location.href = 'https://drakaysa.com.br';
@@ -63,6 +68,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    // Se estiver em desenvolvimento, permite acesso sem autenticação
+    if (isDevelopment()) {
+      setIsAuthenticated(true);
+      return;
+    }
+
     // Captura o token da URL, se existir
     const params = new URLSearchParams(window.location.search);
     const urlToken = params.get('token');
@@ -105,7 +116,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem('auth_token');
     setToken(null);
     setIsAuthenticated(false);
-    window.location.href = 'https://drakaysa.com.br';
+    if (!isDevelopment()) {
+      window.location.href = 'https://drakaysa.com.br';
+    }
   };
 
   return (
