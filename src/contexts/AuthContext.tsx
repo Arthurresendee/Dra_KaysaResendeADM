@@ -49,7 +49,6 @@ axios.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401 && !isDevelopment()) {
-      // Token inválido ou expirado
       localStorage.removeItem('auth_token');
       window.location.href = 'https://drakaysa.com.br';
     }
@@ -58,7 +57,7 @@ axios.interceptors.response.use(
 );
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(isDevelopment());
   const [token, setToken] = useState<string | null>(null);
 
   const checkTokenInUrl = () => {
@@ -68,47 +67,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    // Se estiver em desenvolvimento, permite acesso sem autenticação
+    // Em desenvolvimento, sempre permite acesso
     if (isDevelopment()) {
       setIsAuthenticated(true);
       return;
     }
 
-    // Captura o token da URL, se existir
+    // Lógica de produção
     const params = new URLSearchParams(window.location.search);
     const urlToken = params.get('token');
 
-    if (urlToken) {
-      // Valida o token antes de salvar
-      if (isValidJWT(urlToken)) {
-        localStorage.setItem('auth_token', urlToken);
-        setToken(urlToken);
-        setIsAuthenticated(true);
-        // Limpa o token da URL
-        window.history.replaceState({}, document.title, window.location.pathname);
-      } else {
-        // Token inválido
-        localStorage.removeItem('auth_token');
-        window.location.href = 'https://drakaysa.com.br';
-        return;
-      }
-    }
-
-    // Verifica se existe token no localStorage
-    const storedToken = localStorage.getItem('auth_token');
-    if (storedToken) {
-      // Valida o token armazenado
-      if (isValidJWT(storedToken)) {
+    if (urlToken && isValidJWT(urlToken)) {
+      localStorage.setItem('auth_token', urlToken);
+      setToken(urlToken);
+      setIsAuthenticated(true);
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } else {
+      const storedToken = localStorage.getItem('auth_token');
+      if (storedToken && isValidJWT(storedToken)) {
         setToken(storedToken);
         setIsAuthenticated(true);
       } else {
-        // Token expirado ou inválido
         localStorage.removeItem('auth_token');
         window.location.href = 'https://drakaysa.com.br';
       }
-    } else {
-      // Sem token
-      window.location.href = 'https://drakaysa.com.br';
     }
   }, []);
 

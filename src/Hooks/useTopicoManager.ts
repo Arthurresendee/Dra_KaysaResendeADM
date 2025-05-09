@@ -1,46 +1,32 @@
-import { useState } from 'react';
-import { TopicoType } from '../types/types';
+import { useState, useCallback } from 'react';
+import axios from 'axios';
+import { Topico } from '../types/types';
+
+const API_URL = 'https://drakaysalandingpageapi-production.up.railway.app/api';
 
 export function useTopicoManager() {
-  const [topicos, setTopicos] = useState<TopicoType[]>([]);
+  const [topicos, setTopicos] = useState<Topico[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const adicionarTopico = (novoTopico: TopicoType) => {
-    setTopicos([...topicos, novoTopico]);
-  };
-
-  const excluirTopico = (id: string) => {
-    setTopicos(topicos.filter(topico => topico.id !== id));
-  };
-
-  const adicionarCard = (topicoId: string, novoCard: { titulo: string; texto: string }) => {
-    setTopicos(topicos.map(topico => {
-      if (topico.id === topicoId) {
-        return {
-          ...topico,
-          cards: [...topico.cards, { ...novoCard, id: Date.now().toString() }]
-        };
-      }
-      return topico;
-    }));
-  };
-
-  const excluirCard = (topicoId: string, cardId: string) => {
-    setTopicos(topicos.map(topico => {
-      if (topico.id === topicoId) {
-        return {
-          ...topico,
-          cards: topico.cards.filter(card => card.id !== cardId)
-        };
-      }
-      return topico;
-    }));
-  };
+  const fetchTopicos = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get<Topico[]>(`${API_URL}/topicos`);
+      setTopicos(response.data);
+    } catch (err) {
+      setError('Erro ao carregar os tópicos');
+      console.error('Erro ao buscar tópicos:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   return {
     topicos,
-    adicionarTopico,
-    excluirTopico,
-    adicionarCard,
-    excluirCard
+    isLoading,
+    error,
+    fetchTopicos
   };
 } 

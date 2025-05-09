@@ -1,11 +1,14 @@
 export interface Card {
-  id: string;
+  _id: string;
   titulo: string;
   texto: string;
 }
 
-export interface TopicoType {
-  id: string;
+export interface Topico {
+  _id: string;
   tituloTopico: string;
   cards: Card[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
