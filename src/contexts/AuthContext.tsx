@@ -5,6 +5,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   token: string | null;
   logout: () => void;
+  checkTokenInUrl: () => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -55,6 +56,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [token, setToken] = useState<string | null>(null);
 
+  const checkTokenInUrl = () => {
+    const params = new URLSearchParams(window.location.search);
+    const urlToken = params.get('token');
+    return !!urlToken;
+  };
+
   useEffect(() => {
     // Captura o token da URL, se existir
     const params = new URLSearchParams(window.location.search);
@@ -102,7 +109,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, token, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, token, logout, checkTokenInUrl }}>
       {children}
     </AuthContext.Provider>
   );
