@@ -29,21 +29,6 @@ function isValidJWT(token: string): boolean {
   }
 }
 
-// Função para obter a data de expiração do token
-function getTokenExpiration(token: string): string | null {
-  try {
-    const parts = token.split('.');
-    if (parts.length !== 3) return null;
-    
-    const payload = JSON.parse(atob(parts[1]));
-    const expirationTime = payload.exp * 1000; // Converter para milissegundos
-    
-    return new Date(expirationTime).toLocaleString();
-  } catch {
-    return null;
-  }
-}
-
 // Configurar o axios para incluir o token em todas as requisições
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem('auth_token');
@@ -114,11 +99,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(null);
     setIsAuthenticated(false);
     window.location.href = 'https://drakaysa.com.br';
-  };
-
-  const getTokenExpiration = () => {
-    if (!token) return null;
-    return getTokenExpiration(token);
   };
 
   return (
