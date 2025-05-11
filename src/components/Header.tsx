@@ -7,7 +7,6 @@ export function Header() {
     { to: "/landingPage", label: "LandingPage", aria: "Ir para LandingPage" },
     { to: "/galeria", label: "Galeria", aria: "Ir para Galeria" },
     { to: "/", label: "Inicial", aria: "Ir para Inicial" },
-    { to: "/configuracoes", label: "Configurações", aria: "Ir para Configurações" },
   ];
 
   return (
