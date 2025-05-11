@@ -18,7 +18,7 @@ export function LandingPageAdm() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f5f1eb]">
+    <div className="min-h-screen bg-[#f5f1eb] pt-20">
       <div className="mt-8">
         <NovoTopicoForm
           onSuccess={() => {

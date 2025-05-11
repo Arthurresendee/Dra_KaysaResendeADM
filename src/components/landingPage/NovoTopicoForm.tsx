@@ -77,7 +77,7 @@ export function NovoTopicoForm({ onSuccess, editTopico, onCancelEdit }: NovoTopi
       setTituloTopico('');
       setCards([{ titulo: '', texto: '' }]);
       if (onSuccess) onSuccess();
-    } catch (err) {
+    } catch {
       setError('Erro ao salvar tópico.');
     } finally {
       setIsLoading(false);
@@ -118,7 +118,7 @@ export function NovoTopicoForm({ onSuccess, editTopico, onCancelEdit }: NovoTopi
                     required
                   />
                   <textarea
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 h-32"
                     value={card.texto}
                     onChange={e => handleCardChange(idx, 'texto', e.target.value)}
                     placeholder="Texto do card"
