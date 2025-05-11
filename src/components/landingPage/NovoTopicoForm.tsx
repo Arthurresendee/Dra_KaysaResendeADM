@@ -1,12 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Topico } from '../../types/types';
 
 interface CardInput {
   titulo: string;
   texto: string;
 }
 
-export function NovoTopicoForm({ onSuccess }: { onSuccess?: () => void }) {
+interface NovoTopicoFormProps {
+  onSuccess?: () => void;
+  editTopico?: Topico | null;
+  onCancelEdit?: () => void;
+}
+
+export function NovoTopicoForm({ onSuccess, editTopico, onCancelEdit }: NovoTopicoFormProps) {
   const [tituloTopico, setTituloTopico] = useState('');
   const [cards, setCards] = useState<CardInput[]>([
     { titulo: '', texto: '' }
@@ -14,6 +21,20 @@ export function NovoTopicoForm({ onSuccess }: { onSuccess?: () => void }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    if (editTopico) {
+      setTituloTopico(editTopico.tituloTopico);
+      setCards(editTopico.cards.map(card => ({ titulo: card.titulo, texto: card.texto })));
+      setSuccess(false);
+      setError(null);
+    } else {
+      setTituloTopico('');
+      setCards([{ titulo: '', texto: '' }]);
+      setSuccess(false);
+      setError(null);
+    }
+  }, [editTopico]);
 
   function handleCardChange(index: number, field: keyof CardInput, value: string) {
     setCards(cards => cards.map((card, i) => i === index ? { ...card, [field]: value } : card));
@@ -41,16 +62,23 @@ export function NovoTopicoForm({ onSuccess }: { onSuccess?: () => void }) {
     }
     setIsLoading(true);
     try {
-      await axios.post('https://drakaysalandingpageapi-production.up.railway.app/api/topicos', {
-        tituloTopico,
-        cards
-      });
+      if (editTopico) {
+        await axios.put(`https://drakaysalandingpageapi-production.up.railway.app/api/topicos/${editTopico._id}`, {
+          tituloTopico,
+          cards
+        });
+      } else {
+        await axios.post('https://drakaysalandingpageapi-production.up.railway.app/api/topicos', {
+          tituloTopico,
+          cards
+        });
+      }
       setSuccess(true);
       setTituloTopico('');
       setCards([{ titulo: '', texto: '' }]);
       if (onSuccess) onSuccess();
     } catch (err) {
-      setError('Erro ao criar tópico.');
+      setError('Erro ao salvar tópico.');
     } finally {
       setIsLoading(false);
     }
@@ -58,9 +86,11 @@ export function NovoTopicoForm({ onSuccess }: { onSuccess?: () => void }) {
 
   return (
     <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-lg p-8 max-w-2xl mx-auto mb-12">
-      <h2 className="text-2xl font-bold mb-6 text-center text-[#14263f]">Criar Novo Tópico</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center text-[#14263f]">
+        {editTopico ? 'Editar Tópico' : 'Criar Novo Tópico'}
+      </h2>
       {error && <div className="mb-4 text-red-600 text-center">{error}</div>}
-      {success && <div className="mb-4 text-green-600 text-center">Tópico criado com sucesso!</div>}
+      {success && <div className="mb-4 text-green-600 text-center">Tópico salvo com sucesso!</div>}
       <div className="mb-6">
         <label className="block text-lg font-semibold mb-2 text-[#14263f]">Título do Tópico</label>
         <input
@@ -118,13 +148,24 @@ export function NovoTopicoForm({ onSuccess }: { onSuccess?: () => void }) {
           + Adicionar Card
         </button>
       </div>
-      <button
-        type="submit"
-        className="w-full py-3 bg-blue-600 text-white rounded-lg font-bold text-lg hover:bg-blue-700 transition disabled:opacity-60"
-        disabled={isLoading}
-      >
-        {isLoading ? 'Salvando...' : 'Criar Tópico'}
-      </button>
+      <div className="flex gap-4">
+        {editTopico && (
+          <button
+            type="button"
+            className="flex-1 py-3 bg-gray-200 text-gray-700 rounded-lg font-bold text-lg hover:bg-gray-300 transition"
+            onClick={onCancelEdit}
+          >
+            Cancelar Edição
+          </button>
+        )}
+        <button
+          type="submit"
+          className="flex-1 py-3 bg-blue-600 text-white rounded-lg font-bold text-lg hover:bg-blue-700 transition disabled:opacity-60"
+          disabled={isLoading}
+        >
+          {isLoading ? 'Salvando...' : editTopico ? 'Salvar Alterações' : 'Criar Tópico'}
+        </button>
+      </div>
     </form>
   );
 } 

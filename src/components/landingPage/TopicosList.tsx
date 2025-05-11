@@ -1,8 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useTopicoManager } from '../../Hooks/useTopicoManager';
 import axios from 'axios';
+import { Topico } from '../../types/types';
 
-export function TopicosList() {
+interface TopicosListProps {
+  onEditTopico?: (topico: Topico) => void;
+}
+
+export function TopicosList({ onEditTopico }: TopicosListProps) {
   const { topicos, isLoading, error, fetchTopicos } = useTopicoManager();
   const [removingId, setRemovingId] = useState<string | null>(null);
   const [removeError, setRemoveError] = useState<string | null>(null);
@@ -64,14 +69,23 @@ export function TopicosList() {
           >
             <div className="flex items-center justify-between gap-2">
               <h2 className="text-lg font-bold text-[#14263f]">{topico.tituloTopico}</h2>
-              <button
-                className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200 transition disabled:opacity-60"
-                onClick={() => handleRemoveTopico(topico._id)}
-                disabled={removingId === topico._id}
-                aria-label="Remover tópico"
-              >
-                {removingId === topico._id ? 'Removendo...' : 'Remover'}
-              </button>
+              <div className="flex gap-2">
+                <button
+                  className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition"
+                  onClick={() => onEditTopico && onEditTopico(topico)}
+                  aria-label="Editar tópico"
+                >
+                  Editar
+                </button>
+                <button
+                  className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200 transition disabled:opacity-60"
+                  onClick={() => handleRemoveTopico(topico._id)}
+                  disabled={removingId === topico._id}
+                  aria-label="Remover tópico"
+                >
+                  {removingId === topico._id ? 'Removendo...' : 'Remover'}
+                </button>
+              </div>
             </div>
             <ul className="flex flex-col gap-2">
               {topico.cards.map((card) => (
