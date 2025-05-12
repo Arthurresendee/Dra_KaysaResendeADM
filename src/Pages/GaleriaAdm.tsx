@@ -1,9 +1,10 @@
-import styles from "./GaleriaAdm.module.css";
+import { GaleriaForm } from "../components/Galeria/GaleriaForm";
 
 export default function GaleriaAdm() {
   return (
-    <div className={styles.container}>
-      <h1>Gerenciar Galeria</h1>
+    <div className="container mx-auto py-8">
+      <h1 className="text-2xl font-bold mb-6">Gerenciar Galeria</h1>
+      <GaleriaForm />
     </div>
   );
 }
